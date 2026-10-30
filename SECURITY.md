@@ -1,7 +1,7 @@
 # Security
 
 Do not include signed media URLs, cookies, authorization headers, native messaging
-payloads, browser profile files, or `.mac-idm` contents in public issues.
+payloads, browser profile files, or `.download-manager-for-mac` contents in public issues.
 
 For vulnerabilities, use GitHub's private vulnerability reporting feature if it
 is enabled on this repository. If it is unavailable, open a minimal issue asking

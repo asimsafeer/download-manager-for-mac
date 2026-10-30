@@ -106,7 +106,7 @@ function sanitizeRequest(message) {
   return result;
 }
 function readBridge(configPath) {
-  const file = configPath || path.join(require('node:os').homedir(), '.mac-idm', 'bridge.json');
+  const file = configPath || path.join(require('node:os').homedir(), '.download-manager-for-mac', 'bridge.json');
   const config = JSON.parse(fs.readFileSync(file, 'utf8'));
   if (!Number.isInteger(config.port) || config.port < 1024 || config.port > 65535 || typeof config.token !== 'string' || !/^[A-Za-z0-9_-]{20,256}$/.test(config.token)) throw new Error('Desktop bridge configuration is invalid.');
   return config;
@@ -159,7 +159,7 @@ function runNativeHost({input=process.stdin,output=process.stdout,configPath}={}
         }
         output.write(encodeMessage(result));
       }
-      catch(error) { output.write(encodeMessage({ok:false,error:error.code === 'ENOENT' || error.code === 'ECONNREFUSED' ? 'Start Mac IDM before sending downloads.' : error.message})); }
+      catch(error) { output.write(encodeMessage({ok:false,error:error.code === 'ENOENT' || error.code === 'ECONNREFUSED' ? 'Start Download Manager for Mac before sending downloads.' : error.message})); }
       finally { pendingCount--; }
     });
   });

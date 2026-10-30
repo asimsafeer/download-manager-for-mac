@@ -5,8 +5,8 @@ if (process.argv.includes('--native-host')) {
   require('../integration/native-host.cjs').runNativeHost();
 } else {
   const { app, BrowserWindow, ipcMain, dialog, shell, clipboard, Tray, Menu, nativeImage, Notification } = require('electron');
-  app.setName('Mac IDM');
-  const sharedDataDirectory = path.join(app.getPath('home'), '.mac-idm');
+  app.setName('Download Manager for Mac');
+  const sharedDataDirectory = path.join(app.getPath('home'), '.download-manager-for-mac');
   require('node:fs').mkdirSync(sharedDataDirectory, {recursive:true});
   app.setPath('userData', sharedDataDirectory);
   const locked = app.requestSingleInstanceLock();
@@ -132,7 +132,7 @@ if (process.argv.includes('--native-host')) {
       ipcMain.handle('downloader:closeProgress',event=>{for(const progress of progressWindows.values())if(event.senderFrame===progress.webContents.mainFrame){progress.close();break;}});
       ipcMain.handle('downloader:resizeProgress',(event,{expanded}={})=>{for(const progress of progressWindows.values())if(event.senderFrame===progress.webContents.mainFrame){const remembered=progressWindowSizes.get(progress)||{expanded:{width:565,height:485}},[width,height]=progress.getSize();if(expanded){progress.setMinimumSize(540,440);progress.setSize(Math.max(540,remembered.expanded.width),Math.max(440,remembered.expanded.height),true);}else{if(height>360)remembered.expanded={width,height};progressWindowSizes.set(progress,remembered);progress.setMinimumSize(540,325);progress.setSize(Math.max(540,width),340,true);}return;}});
       window = new BrowserWindow({ show: !process.argv.includes('--browser-download'), width: 805, height: 465, minWidth: 760, minHeight: 450,
-        title: 'Mac IDM', icon: appIconPath, backgroundColor: '#f0f0f0', autoHideMenuBar: false,
+        title: 'Download Manager for Mac', icon: appIconPath, backgroundColor: '#f0f0f0', autoHideMenuBar: false,
         webPreferences: { preload: path.join(__dirname, 'preload.cjs'), contextIsolation: true, nodeIntegration: false, sandbox: true } });
       window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
       window.webContents.on('will-navigate', event => event.preventDefault());
@@ -145,13 +145,13 @@ if (process.argv.includes('--native-host')) {
       // macOS application menu
       Menu.setApplicationMenu(Menu.buildFromTemplate([
         { role: 'appMenu', submenu: [
-          { label: 'About Mac IDM', click: () => dialog.showMessageBox(window, { title: 'About Mac IDM', message: 'Mac IDM 0.1.1', detail: 'macOS download manager with browser integration.' }) },
+          { label: 'About Download Manager for Mac', click: () => dialog.showMessageBox(window, { title: 'About Download Manager for Mac', message: 'Download Manager for Mac 0.1.1', detail: 'macOS download manager with browser integration.' }) },
           { type: 'separator' },
           { role: 'hide' },
           { role: 'hideOthers' },
           { role: 'unhide' },
           { type: 'separator' },
-          { label: 'Quit Mac IDM', accelerator: 'CmdOrCtrl+Q', click: () => app.quit() }
+          { label: 'Quit Download Manager for Mac', accelerator: 'CmdOrCtrl+Q', click: () => app.quit() }
         ] },
         { label: 'Tasks', submenu: [ { label: 'Add new download…', accelerator: 'CmdOrCtrl+N', click: command('add') }, { label: 'Add batch download…', click: command('add') }, { label: 'Add batch download from clipboard', click: command('paste') }, { type: 'separator' },
           { label: 'Export', submenu: [{ label: 'To text file…', click: async () => {
@@ -196,13 +196,13 @@ if (process.argv.includes('--native-host')) {
       const icon = nativeImage.createFromPath(path.join(root, 'assets', 'trayTemplate.png'));
       icon.setTemplateImage(true);
       tray = new Tray(icon);
-      tray.setToolTip('Mac IDM');
+      tray.setToolTip('Download Manager for Mac');
       tray.setContextMenu(Menu.buildFromTemplate([{ label: 'Show downloads', click: () => window.show() }, { label: 'Quit', click: () => app.quit() }]));
       tray.on('double-click', () => window.show());
       window.on('minimize', dismissBrowserIntegration);
       window.on('close', event => { if (!quitting) { event.preventDefault(); dismissBrowserIntegration(); window.hide(); } });
       app.on('activate', () => window.show());
-    }).catch(error => { dialog.showErrorBox('Mac IDM could not start', error.stack || error.message); quitting = true; app.quit(); });
+    }).catch(error => { dialog.showErrorBox('Download Manager for Mac could not start', error.stack || error.message); quitting = true; app.quit(); });
     app.on('before-quit', event => {
       if (quitting) return;
       event.preventDefault(); quitting = true;

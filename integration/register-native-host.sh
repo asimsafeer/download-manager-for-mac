@@ -1,6 +1,5 @@
 #!/bin/bash
-# Mac IDM – macOS browser native messaging host registration.
-# Equivalent of register-native-host.ps1 for macOS.
+# Download Manager for Mac – macOS browser native messaging host registration.
 #
 # Usage:
 #   ./register-native-host.sh --browser Chrome --extension-id YOUR_EXTENSION_ID
@@ -35,7 +34,7 @@ if [[ ! -x "$HOST_PATH" ]]; then
   exit 1
 fi
 
-HOST_NAME="com.aasimdev.macidm"
+HOST_NAME="com.aasimdev.downloadmanagerformac"
 
 case "$BROWSER" in
   Chrome)
@@ -66,7 +65,7 @@ if [[ "$BROWSER" == "Firefox" ]]; then
   cat > "$MANIFEST_PATH" <<EOF
 {
   "name": "$HOST_NAME",
-  "description": "Mac IDM browser bridge",
+  "description": "Download Manager for Mac browser bridge",
   "path": "$HOST_PATH",
   "type": "stdio",
   "allowed_extensions": ["$EXTENSION_ID"]
@@ -76,7 +75,7 @@ else
   cat > "$MANIFEST_PATH" <<EOF
 {
   "name": "$HOST_NAME",
-  "description": "Mac IDM browser bridge",
+  "description": "Download Manager for Mac browser bridge",
   "path": "$HOST_PATH",
   "type": "stdio",
   "allowed_origins": ["chrome-extension://$EXTENSION_ID/"]

@@ -6,7 +6,7 @@ labels: ''
 assignees: ''
 ---
 
-App version, Windows version, browser and extension version:
+App version, macOS version, Mac type (Intel or Apple Silicon), browser and extension version:
 
 Steps to reproduce:
 
@@ -15,4 +15,4 @@ Expected behavior:
 Actual behavior:
 
 Remove signed media URLs, account details, cookies and tokens from screenshots
-and logs. Do not attach your browser profile or `.mac-idm` folder.
+and logs. Do not attach your browser profile or `.download-manager-for-mac` folder.

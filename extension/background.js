@@ -1,7 +1,7 @@
 /* Downloads require extension UI messages; page player metadata is bounded and sanitized. */
 if(typeof importScripts==='function') importScripts('hls.js','youtube-media.js');
 const api = globalThis.browser || chrome;
-const HOST = 'com.aasimdev.macidm';
+const HOST = 'com.aasimdev.downloadmanagerformac';
 const CACHE_KEY = 'mediaByTab';
 const SABR_KEY = 'sabrByTab';
 let serial = Promise.resolve();
@@ -173,7 +173,7 @@ api.runtime.onInstalled.addListener(async () => {
     const current=await api.storage.local.get('interceptDownloads');
     if(current.interceptDownloads===undefined)await api.storage.local.set({interceptDownloads:true});
     await api.contextMenus.removeAll();
-    api.contextMenus.create({id: 'awesome-link', title: 'Download with Mac IDM', contexts: ['link', 'video', 'audio']});
+    api.contextMenus.create({id: 'awesome-link', title: 'Download with Download Manager for Mac', contexts: ['link', 'video', 'audio']});
     api.contextMenus.create({id: 'awesome-page', title: 'Find downloadable links on this page', contexts: ['page']});
   } catch (error) { await api.storage.local.set({lastError: error.message}); }
 });
@@ -258,6 +258,6 @@ api.downloads.onCreated.addListener(async item => {
     await api.downloads.cancel(item.id);
   } catch (e) {
     if(paused&&!accepted)await api.downloads.resume(item.id).catch(()=>{});
-    await api.storage.local.set({lastError:accepted?`The browser download could not be canceled; Mac IDM continues the transfer: ${e.message}`:`Browser download was kept: ${e.message}`});
+    await api.storage.local.set({lastError:accepted?`The browser download could not be canceled; Download Manager for Mac continues the transfer: ${e.message}`:`Browser download was kept: ${e.message}`});
   }
 });

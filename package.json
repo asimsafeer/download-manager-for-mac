@@ -1,11 +1,11 @@
 {
-  "name": "mac-idm",
+  "name": "download-manager-for-mac",
   "version": "0.1.1",
   "description": "A macOS download manager with segmented transfers and browser video capture",
   "main": "desktop/main.cjs",
   "private": true,
-  "repository": { "type": "git", "url": "https://github.com/aasimdev/mac-idm.git" },
-  "bugs": { "url": "https://github.com/aasimdev/mac-idm/issues" },
+  "repository": { "type": "git", "url": "https://github.com/aasimdev/download-manager-for-mac.git" },
+  "bugs": { "url": "https://github.com/aasimdev/download-manager-for-mac/issues" },
   "author": "aasimdev",
   "license": "Apache-2.0 AND MIT",
   "scripts": {
@@ -25,8 +25,8 @@
     "playwright": "^1.58.2"
   },
   "build": {
-    "appId": "com.aasimdev.macidm",
-    "productName": "Mac IDM",
+    "appId": "com.aasimdev.downloadmanagerformac",
+    "productName": "Download Manager for Mac",
     "directories": {
       "output": "release"
     },
@@ -84,13 +84,14 @@
       ],
       "icon": "build/icon.icns",
       "category": "public.app-category.utilities",
-      "artifactName": "Mac-IDM-${version}-macOS-${arch}.${ext}",
+      "artifactName": "Download-Manager-for-Mac-${version}-macOS-${arch}.${ext}",
+      "signIgnore": ["Contents/Resources/tools/yt-dlp/"],
       "hardenedRuntime": false,
       "gatekeeperAssess": false,
       "identity": "-"
     },
     "dmg": {
-      "title": "Mac IDM",
+      "title": "Download Manager for Mac",
       "contents": [
         { "x": 130, "y": 220 },
         { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
