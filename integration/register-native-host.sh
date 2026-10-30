@@ -34,7 +34,7 @@ if [[ ! -x "$HOST_PATH" ]]; then
   exit 1
 fi
 
-HOST_NAME="com.aasimdev.downloadmanagerformac"
+HOST_NAME="com.asimsafeer.downloadmanagerformac"
 
 case "$BROWSER" in
   Chrome)

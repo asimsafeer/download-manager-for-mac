@@ -37,7 +37,7 @@ function computeExtensionId(folderPath) {
 async function registerBrowser({ browser, extensionId }, { dataDirectory, integrationRoot }) {
   const spec = browserSpec(browser);
   if (typeof extensionId !== 'string' || !(spec.firefox ? /^[A-Za-z0-9@._{}-]{1,128}$/ : /^[a-p]{32}$/).test(extensionId)) throw new Error("Copy the extension ID from your browser's extensions page.");
-  const host = 'com.aasimdev.downloadmanagerformac';
+  const host = 'com.asimsafeer.downloadmanagerformac';
   const nativeHostPath = path.join(integrationRoot, 'integration', 'native-host.sh');
   const manifest = { name: host, description: 'Download Manager for Mac browser bridge', path: nativeHostPath, type: 'stdio' };
   if (spec.firefox) manifest.allowed_extensions = [extensionId];
@@ -97,7 +97,7 @@ async function connectInstalledBrowsers({ dataDirectory, integrationRoot, appSup
             if (installed && !ownExtension) {
               const manifest = JSON.parse(await fs.readFile(path.join(installed, 'manifest.json'), 'utf8'));
               const background = await fs.readFile(path.join(installed, 'background.js'), 'utf8');
-              ownExtension = manifest.name === 'Download Manager for Mac Integration' && manifest.background?.service_worker === 'background.js' && background.includes("const HOST = 'com.aasimdev.downloadmanagerformac'");
+              ownExtension = manifest.name === 'Download Manager for Mac Integration' && manifest.background?.service_worker === 'background.js' && background.includes("const HOST = 'com.asimsafeer.downloadmanagerformac'");
             }
             if (ownExtension) ids.add(id);
           }

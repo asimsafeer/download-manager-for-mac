@@ -4,9 +4,9 @@
   "description": "A macOS download manager with segmented transfers and browser video capture",
   "main": "desktop/main.cjs",
   "private": true,
-  "repository": { "type": "git", "url": "https://github.com/aasimdev/download-manager-for-mac.git" },
-  "bugs": { "url": "https://github.com/aasimdev/download-manager-for-mac/issues" },
-  "author": "aasimdev",
+  "repository": { "type": "git", "url": "https://github.com/asimsafeer/download-manager-for-mac.git" },
+  "bugs": { "url": "https://github.com/asimsafeer/download-manager-for-mac/issues" },
+  "author": "asimsafeer",
   "license": "Apache-2.0 AND MIT",
   "scripts": {
     "start": "electron .",
@@ -27,7 +27,7 @@
     "playwright": "^1.58.2"
   },
   "build": {
-    "appId": "com.aasimdev.downloadmanagerformac",
+    "appId": "com.asimsafeer.downloadmanagerformac",
     "productName": "Download Manager for Mac",
     "directories": {
       "output": "release"

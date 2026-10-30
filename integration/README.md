@@ -8,7 +8,7 @@ Click **Download this video**, choose a quality/format, then **Start Download** 
 
 - The browser starts `integration/native-host.sh`, which runs `native-host.cjs` with the app's bundled runtime (`ELECTRON_RUN_AS_NODE`). The launcher is rewritten on every app start so it always points at the current app location.
 - The native host forwards bounded JSON to an authenticated, loopback-only endpoint, reading its port and token from `~/.download-manager-for-mac/bridge.json`. It starts the app if it is closed.
-- Registration writes one manifest per browser, `com.aasimdev.downloadmanagerformac.json`, in that browser's `NativeMessagingHosts` folder under `~/Library/Application Support/`:
+- Registration writes one manifest per browser, `com.asimsafeer.downloadmanagerformac.json`, in that browser's `NativeMessagingHosts` folder under `~/Library/Application Support/`:
 
   | Browser | Folder |
   |---|---|

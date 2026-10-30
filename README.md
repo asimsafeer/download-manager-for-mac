@@ -9,7 +9,7 @@ on every release.
 
 ## Download
 
-Get the latest build from [Releases](https://github.com/aasimdev/download-manager-for-mac/releases):
+Get the latest build from [Releases](https://github.com/asimsafeer/download-manager-for-mac/releases):
 
 | Your Mac | File |
 |---|---|

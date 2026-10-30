@@ -1,7 +1,7 @@
 /* Downloads require extension UI messages; page player metadata is bounded and sanitized. */
 if(typeof importScripts==='function') importScripts('hls.js','youtube-media.js');
 const api = globalThis.browser || chrome;
-const HOST = 'com.aasimdev.downloadmanagerformac';
+const HOST = 'com.asimsafeer.downloadmanagerformac';
 const CACHE_KEY = 'mediaByTab';
 const SABR_KEY = 'sabrByTab';
 let serial = Promise.resolve();

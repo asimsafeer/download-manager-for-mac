@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Repeatable brand rename. Dry-run by default; pass --apply to write files.
 //   node scripts/rename-brand.mjs --display "Download Manager for Mac"          (preview)
-//   node scripts/rename-brand.mjs --display "Download Manager for Mac" --apply
+//   node scripts/rename-brand.mjs --display "Download Manager for Mac" --owner asimsafeer --apply
 // Every new form is derived from --display. Only the current "Mac IDM" forms are replaced, so the
 // upstream credits (LICENSE, README acknowledgements), the bare word "IDM" (Tonec's product) and the
 // internal awesome-* DOM events are never touched.
@@ -15,6 +15,7 @@ const argv = process.argv.slice(2);
 const flag = name => { const i = argv.indexOf(`--${name}`); return i === -1 ? undefined : argv[i + 1]; };
 const apply = argv.includes('--apply');
 const display = flag('display');
+const owner = flag('owner') || 'asimsafeer'; // GitHub account used in repo URLs and reverse-DNS ids
 if (!display) { console.error('usage: rename-brand.mjs --display "New Name" [--apply]'); process.exit(2); }
 
 const words = display.split(/\s+/);
@@ -28,9 +29,10 @@ const forms = {
 
 // Order matters: longest/most specific first. `from` forms are the current identifiers.
 const rules = [
-  ['aasimdev/mac-idm', `aasimdev/${forms.slug}`],
-  ['com.aasimdev.macidm', `com.aasimdev.${forms.compact}`],
-  ['macidm@aasimdev.github.io', `${forms.compact}@aasimdev.github.io`],
+  // The first element of each pair is the OLD identifier as it appeared in the Mac IDM tree.
+  ['aasimdev/mac-idm', `${owner}/${forms.slug}`],
+  ['com.aasimdev.macidm', `com.${owner}.${forms.compact}`],
+  ['macidm@aasimdev.github.io', `${forms.compact}@${owner}.github.io`],
   ['.mac-idm', `.${forms.slug}`],
   ['Mac-IDM', forms.hyphenCased],
   ['Mac IDM', forms.display],
@@ -66,5 +68,5 @@ for (const file of files) {
   if (apply) writeFileSync(path.join(root, file), after);
 }
 console.log(`\n${apply ? 'Rewrote' : 'Would rewrite'} ${changedLines} line(s) in ${changedFiles} file(s).`);
-console.log('Forms:', JSON.stringify(forms));
+console.log('Forms:', JSON.stringify({ ...forms, owner }));
 if (!apply) console.log('Dry run only. Re-run with --apply to write the changes.');
