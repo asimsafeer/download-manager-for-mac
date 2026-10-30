@@ -63,7 +63,9 @@ itself ported from [Awesome Downloader for Windows](https://github.com/TheAwesom
 Thanks to those authors. This project is not affiliated with them, or with Tonec Inc.
 or Internet Download Manager.
 
-Code is [MIT licensed](LICENSE) and keeps the original copyright notice. Bundled
+Code added in this fork is licensed under [Apache-2.0](LICENSE). The portions derived from
+awesome-downloader-mac remain under the original MIT License, whose copyright notice is kept
+verbatim in [LICENSE-UPSTREAM-MIT](LICENSE-UPSTREAM-MIT) (see also [NOTICE](NOTICE)). Bundled
 third-party components keep their own licenses: FFmpeg (GPL-3.0-or-later, via
 `ffmpeg-static`), yt-dlp (Unlicense) and `googlevideo` (MIT). See
 [THIRD-PARTY.md](THIRD-PARTY.md).

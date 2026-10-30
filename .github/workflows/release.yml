@@ -64,7 +64,7 @@ jobs:
           Downloads: `*-macOS-arm64.dmg` for Apple Silicon (M1 and later), `*-macOS-x64.dmg` for Intel Macs.
           Builds are not notarized: right-click the app and choose Open on first launch.
 
-          Licenses: Mac IDM is MIT. The bundled FFmpeg (ffmpeg-static, FFmpeg b6.1.1) is GPL-3.0-or-later;
+          Licenses: Download Manager for Mac is Apache-2.0; portions derived from awesome-downloader-mac remain MIT (see NOTICE). The bundled FFmpeg (ffmpeg-static, FFmpeg b6.1.1) is GPL-3.0-or-later;
           its corresponding source is at https://github.com/eugeneware/ffmpeg-static/releases/tag/b6.1.1
           and https://ffmpeg.org/download.html. yt-dlp is public domain (Unlicense). See THIRD-PARTY.md.
           EOF
