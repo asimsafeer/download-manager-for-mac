@@ -47,12 +47,16 @@
     "extraResources": [
       { "from": "node_modules/ffmpeg-static/LICENSE", "to": "licenses/ffmpeg-static-LICENSE.txt" },
       { "from": "node_modules/googlevideo/LICENSE", "to": "licenses/googlevideo-LICENSE.txt" },
+      { "from": "node_modules/ffmpeg-static/ffmpeg.LICENSE", "to": "licenses/ffmpeg-licensing-note.txt" },
+      { "from": "build/ffmpeg-build-info.txt", "to": "licenses/ffmpeg-build-info.txt" },
+      { "from": "vendor/yt-dlp", "to": "tools/yt-dlp" },
       {
         "from": "vendor",
         "to": "tools",
         "filter": [
-          "*.txt",
-          "yt-dlp_macos"
+          "LICENSE.txt",
+          "THIRD_PARTY_LICENSES.txt",
+          "!yt-dlp/**"
         ]
       },
       {

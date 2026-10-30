@@ -19,4 +19,6 @@ coverage/
 *.log
 test-results/
 .DS_Store
-vendor/yt-dlp_macos
+vendor/yt-dlp/
+vendor/.yt-dlp-version
+build/ffmpeg-build-info.txt

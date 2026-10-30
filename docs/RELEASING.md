@@ -9,7 +9,9 @@
    corresponding source for the exact bundled build (see `THIRD-PARTY.md`); the release
    workflow's notes already do this. If you change the `ffmpeg-static` version, update the links.
 4. Bump the yt-dlp version in `scripts/fetch-yt-dlp.mjs` deliberately; the script verifies the
-   checksum published with that release.
+   checksum published with that release. The app bundles yt-dlp's one-directory build (not the
+   one-file binary), and `core/youtube.mjs` warms it up at app start: macOS checks each native
+   file once on first run, which measured 181 s cold vs 8 s warm on a busy Intel Mac.
 5. Manual smoke test on a clean Mac of each architecture: install from the DMG, launch,
    download an HTTP file and an HLS stream, set up the browser extension, send a download
    from the browser, and run a YouTube extraction.

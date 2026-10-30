@@ -24,6 +24,8 @@ if (process.argv.includes('--native-host')) {
       } catch (error) { if (!['ENOENT','EEXIST'].includes(error.code)) throw error; }
       const { DownloadEngine } = await import('../core/engine.mjs');
       const { startBridge } = await import('../core/bridge.mjs');
+      // Let macOS finish its one-time checks of the bundled yt-dlp in the background (can take minutes on first run).
+      import('../core/youtube.mjs').then(youtube => youtube.warmUpYoutube()).catch(() => {});
       engine = await new DownloadEngine({ dataDirectory: app.getPath('userData'), downloadDirectory: app.getPath('downloads') }).init();
       let desktopReady;
       const readyForDownloads = new Promise(resolve => { desktopReady = resolve; });

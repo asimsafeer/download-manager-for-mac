@@ -22,10 +22,11 @@ Source and license: https://github.com/LuanRT/GoogleVideo
 
 # YouTube extraction
 
-The macOS builds bundle the official `yt-dlp_macos` (universal2) from the yt-dlp release
-pinned in `scripts/fetch-yt-dlp.mjs` (2026.08.19). The script verifies its SHA-256 against the
-release's `SHA2-256SUMS` before packaging. Source: https://github.com/yt-dlp/yt-dlp . The core
+The macOS builds bundle the official one-directory `yt-dlp_macos.zip` build (universal2, in
+`resources/tools/yt-dlp/`) from the yt-dlp release pinned in `scripts/fetch-yt-dlp.mjs` (2026.08.19).
+The script verifies its SHA-256 against the release's `SHA2-256SUMS` before packaging. Source: https://github.com/yt-dlp/yt-dlp . The core
 is public domain (Unlicense); the executable includes additional components under their own
 licenses. Full upstream notices are in `vendor/LICENSE.txt` and `vendor/THIRD_PARTY_LICENSES.txt`,
-copied to the packaged `resources/tools` folder.
+copied to the packaged `resources/tools` folder (the full dependency notices also ship inside
+`resources/tools/yt-dlp/_internal/`).
 This is an independent extractor, not recovered IDM implementation code.

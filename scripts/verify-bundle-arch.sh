@@ -31,5 +31,13 @@ check() {
 
 ffmpeg=$(find "$resources/app.asar.unpacked" -type f -name ffmpeg | head -n1)
 check "${ffmpeg:-$resources/app.asar.unpacked/node_modules/ffmpeg-static/ffmpeg}" exact
-check "$resources/tools/yt-dlp_macos" contains   # universal2: must contain the target slice
+# universal2: the launcher and every bundled native module must contain the target slice
+ytdlp="$resources/tools/yt-dlp"
+check "$ytdlp/yt-dlp_macos" contains
+count=0
+while IFS= read -r lib; do
+  check "$lib" contains; count=$((count + 1))
+done < <(find "$ytdlp" -type f \( -name '*.so' -o -name '*.dylib' -o -name Python \) | sort)
+echo "checked $count yt-dlp native libraries"
+[ "$count" -gt 0 ] || { echo "No yt-dlp native libraries found under $ytdlp"; status=1; }
 exit $status

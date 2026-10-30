@@ -36,8 +36,8 @@ export function choicesFromInfo(info,url) {
   return result;
 }
 function executable() {
-  const binaryName = process.platform === 'win32' ? 'yt-dlp.exe' : (process.platform === 'darwin' ? 'yt-dlp_macos' : 'yt-dlp');
-  return process.versions.electron&&process.resourcesPath&&!process.defaultApp?path.join(process.resourcesPath,'tools',binaryName):fileURLToPath(new URL(`../vendor/${binaryName}`,import.meta.url));
+  const binaryName = process.platform === 'darwin' ? 'yt-dlp_macos' : 'yt-dlp';
+  return process.versions.electron&&process.resourcesPath&&!process.defaultApp?path.join(process.resourcesPath,'tools','yt-dlp',binaryName):fileURLToPath(new URL(`../vendor/yt-dlp/${binaryName}`,import.meta.url));
 }
 export function youtubeError(raw) {
   const message=String(raw);
@@ -61,11 +61,28 @@ function run(args,{signal,onLine,timeout=120000}={}) {
     child.on('close',code=>{clearTimeout(timer);if(signal?.aborted)return reject(signal.reason);if(code===0&&!overflow)resolve(output);else reject(youtubeError(overflow?'YouTube response exceeded its size limit.':error));});
   });
 }
+// macOS checks every native file yt-dlp loads the first time it runs after installation. That can take
+// minutes on a busy Mac (measured: 181 s cold, 8 s warm), so it is paid once in the background at app
+// start instead of during the user's first YouTube request.
+let warmState='idle',warmPromise=null,warmError=null;
+export function warmUpYoutube() {
+  if(warmState==='warming'||warmState==='ready')return warmPromise;
+  warmState='warming';warmError=null;
+  warmPromise=run(['--version'],{timeout:15*60*1000}).then(()=>{warmState='ready';return true;},error=>{warmState='failed';warmError=error;return false;});
+  return warmPromise;
+}
+export function youtubeReadiness() { return {state:warmState,error:warmError?.message||null}; }
 const cache=new Map();
 let active=0;
 let rateLimitUntil=0;
 export async function youtubeFormats(input) {
   const url=youtubeUrl(input);if(!url)throw new Error('A valid YouTube video URL is required.');
+  if(warmState!=='ready') {
+    const failure=warmState==='failed'?warmError:null;
+    warmUpYoutube();
+    if(failure)throw failure;
+    throw Object.assign(new Error('The YouTube downloader is getting ready for first use. macOS checks it once after installation, which can take a few minutes. Please try again shortly.'),{code:'YOUTUBE_WARMING'});
+  }
   const existing=cache.get(url);if(existing&&existing.expires>Date.now())return existing.promise;
   if(Date.now()<rateLimitUntil)throw youtubeError('HTTP Error 429');
   if(active>=2)throw new Error('Already checking two videos. Try again shortly.');
