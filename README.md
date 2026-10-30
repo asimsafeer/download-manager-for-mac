@@ -1,56 +1,69 @@
-# Awesome Downloader (macOS)
+# Mac IDM
 
-A macOS download manager with a compact desktop interface and browser video
-buttons. Open-source implementation ported to macOS with native Apple Silicon
-(arm64) and Intel (x64) support.
+A download manager for macOS with segmented transfers and one-click browser video
+capture. Ships separate, tested builds for **Intel (x64)** and **Apple Silicon (arm64)**.
+Each build bundles an ffmpeg and yt-dlp that match your Mac's chip, and CI checks that
+on every release.
 
-**Ported from:** [Awesome Downloader for Windows](https://github.com/TheAwesomeDeveloper/Awesome-Downloader-for-Windows).
+**Early preview:** private/sign-in-required pages, DRM and live media are unsupported.
 
-**Early preview:** Private/sign-in-required, DRM and live media are unsupported.
+## Download
+
+Get the latest build from [Releases](https://github.com/aasimdev/mac-idm/releases):
+
+| Your Mac | File |
+|---|---|
+| Intel Mac | `Mac-IDM-<version>-macOS-x64.dmg` |
+| Apple Silicon (M1 or later) | `Mac-IDM-<version>-macOS-arm64.dmg` |
+
+Not sure which one you have? Apple menu > About This Mac. "Chip: Apple M…" means arm64;
+"Processor: Intel …" means x64.
+
+1. Open the DMG and drag **Mac IDM** into **Applications**.
+2. Builds are not notarized yet. On first launch, right-click the app and choose
+   **Open**, then confirm.
 
 ## Features
 
-- High-speed HTTP(S) multi-segmented parallel downloads.
-- Pause/resume for supported transfers, history, scheduling, and speed limits.
-- Chrome and Edge media detection and quality selection; selected video/audio tracks
-  are combined locally with FFmpeg.
+- Multi-segment parallel HTTP(S) downloads, pause/resume, history, scheduling, speed limits.
+- Chrome, Edge, Brave and Opera media detection and quality selection; video and audio
+  tracks are combined locally with FFmpeg.
 - Download File Info with custom save folder, categories, Download Later, and Start.
-- Separate progress and completion windows, duplicate-active-download prevention.
-- Native macOS integration: menu bar tray, dock support, DMG installer, and native messaging bridge.
+- Separate progress and completion windows; duplicate-download prevention.
+- Menu bar tray, dock support and a native messaging bridge to the browser extension.
 
-## Installation
+## Browser extension setup (Chrome / Edge / Brave / Opera)
 
-1. Download **Awesome-Downloader-0.1.1-macOS-arm64.dmg** (Apple Silicon M1/M2/M3/M4) or **x64.dmg** (Intel Macs) from GitHub Releases.
-2. Open the DMG and drag **Awesome Downloader** into your **Applications** folder.
-3. Launch Awesome Downloader from Applications or Spotlight.
-
-## Browser Extension Setup (Chrome / Edge)
-
-The browser extension allows one-click video detection and download:
-
-1. Click **Browser Integration** in the Awesome Downloader toolbar.
-2. Click **Copy extension folder path**.
-3. Click **Open Chrome extensions** (or Edge).
-4. Turn on **Developer mode** in your browser's Extensions page.
-5. Click **Load unpacked**, press **Cmd+Shift+G**, paste the copied path, and select the folder.
-6. The desktop app will automatically connect with the extension. Refresh any video page to see the download button.
+1. Click **Browser Integration** in the Mac IDM toolbar.
+2. Click **Copy extension folder path**, then **Open Chrome extensions** (or Edge).
+3. Turn on **Developer mode** on the Extensions page.
+4. Click **Load unpacked**, press **Cmd+Shift+G**, paste the path and select the folder.
+5. The app connects to the extension automatically. Refresh a video page to see the button.
 
 ## Development
 
 ```bash
-# Install dependencies
-npm install
-
-# Run automated tests
+npm ci
 npm test
-
-# Start the desktop app in development
 npm start
 
-# Build package (DMG)
-npm run dist
+npm run dist:x64     # Intel DMG + ZIP into release/
+npm run dist:arm64   # Apple Silicon DMG + ZIP into release/
+npm run verify:arch -- x64   # check the packaged ffmpeg / yt-dlp match the arch
 ```
 
-## License
+Build each architecture on a matching Mac (or the matching GitHub runner, as the
+release workflow does) so `ffmpeg-static` downloads the right ffmpeg.
+`npm run dist*` also downloads and checksum-verifies the official `yt-dlp_macos`.
 
-Original project code is [MIT licensed](LICENSE). Included third-party binaries retain their respective licenses.
+## Acknowledgements and license
+
+Mac IDM is a fork of [awesome-downloader-mac](https://github.com/abuzargifari/awesome-downloader-mac),
+itself ported from [Awesome Downloader for Windows](https://github.com/TheAwesomeDeveloper/Awesome-Downloader-for-Windows).
+Thanks to those authors. This project is not affiliated with them, or with Tonec Inc.
+or Internet Download Manager.
+
+Code is [MIT licensed](LICENSE) and keeps the original copyright notice. Bundled
+third-party components keep their own licenses: FFmpeg (GPL-3.0-or-later, via
+`ffmpeg-static`), yt-dlp (Unlicense) and `googlevideo` (MIT). See
+[THIRD-PARTY.md](THIRD-PARTY.md).

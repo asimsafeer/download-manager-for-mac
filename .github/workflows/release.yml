@@ -1,11 +1,21 @@
-name: Build macOS Release Candidate
+name: Build macOS Release
 on:
   workflow_dispatch:
+  push:
+    tags: ['v*']
 permissions:
   contents: write
 jobs:
   build:
-    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64
+            runner: macos-latest      # Apple Silicon
+          - arch: x64
+            runner: macos-15-intel    # Intel
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
@@ -13,19 +23,49 @@ jobs:
         with:
           node-version: '22'
           cache: npm
+      # Native runner per arch so ffmpeg-static downloads the matching ffmpeg.
       - run: npm ci
+      - name: Check host ffmpeg matches target
+        run: |
+          want=$([ "${{ matrix.arch }}" = x64 ] && echo x86_64 || echo arm64)
+          lipo -archs node_modules/ffmpeg-static/ffmpeg | grep -qx "$want"
       - run: npm test
-      - run: npm run dist
+      - run: npm run dist:${{ matrix.arch }}
+      - name: Verify packaged binaries match ${{ matrix.arch }}
+        run: npm run verify:arch -- ${{ matrix.arch }}
       - name: Create SHA-256 checksums
         run: |
           cd release
-          shasum -a 256 *.dmg *.zip 2>/dev/null > SHA256SUMS.txt || true
+          shasum -a 256 *.dmg *.zip > SHA256SUMS-${{ matrix.arch }}.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: macos-release-candidate
+          name: macos-${{ matrix.arch }}
           path: |
             release/*.dmg
             release/*.zip
-            release/SHA256SUMS.txt
-          if-no-files-found: warn
+            release/SHA256SUMS-${{ matrix.arch }}.txt
+          if-no-files-found: error
           retention-days: 7
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat > notes.md <<'EOF'
+          Downloads: `*-macOS-arm64.dmg` for Apple Silicon (M1 and later), `*-macOS-x64.dmg` for Intel Macs.
+          Builds are not notarized: right-click the app and choose Open on first launch.
+
+          Licenses: Mac IDM is MIT. The bundled FFmpeg (ffmpeg-static, FFmpeg b6.1.1) is GPL-3.0-or-later;
+          its corresponding source is at https://github.com/eugeneware/ffmpeg-static/releases/tag/b6.1.1
+          and https://ffmpeg.org/download.html. yt-dlp is public domain (Unlicense). See THIRD-PARTY.md.
+          EOF
+          gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --notes-file notes.md

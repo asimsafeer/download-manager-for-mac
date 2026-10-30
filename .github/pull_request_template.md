@@ -1,4 +1,3 @@
-<!-- Read docs/CONTRIBUTOR-START-HERE.md before starting new feature work. -->
 
 ## Approved issue and dependencies
 

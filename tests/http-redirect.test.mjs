@@ -34,7 +34,7 @@ test('cross-origin redirects do not forward Referer or credentials', async t => 
       cookie: 'session=do-not-forward',
       authorization: 'Bearer do-not-forward',
       origin: 'https://private.example',
-      'user-agent': 'AwesomeDownloader/test'
+      'user-agent': 'MacIDM/test'
     }
   });
   response.resume();
@@ -45,5 +45,5 @@ test('cross-origin redirects do not forward Referer or credentials', async t => 
   assert.equal(received.cookie, undefined);
   assert.equal(received.authorization, undefined);
   assert.equal(received.origin, undefined);
-  assert.equal(received['user-agent'], 'AwesomeDownloader/test');
+  assert.equal(received['user-agent'], 'MacIDM/test');
 });

@@ -1,46 +1,22 @@
 # Contributing
 
-Issues and pull requests are welcome. This is an early Windows preview, not a
-finished replacement for every commercial downloader feature.
-
-Read the [contributor start guide](docs/CONTRIBUTOR-START-HERE.md) before choosing
-work. It explains our roadmap, labels and implementation order. For new feature
-work, pick an approved issue and agree your approach and ownership with the
-maintainer before coding. Propose features outside the backlog for approval first.
+Issues and pull requests are welcome. This is an early macOS preview.
 
 ## Development
 
-Use Windows x64 and Node.js 22 or newer with npm. Fork this repository, clone your
-fork, and create a branch for one focused change.
+Use macOS, Node.js 22 or newer and npm. Fork the repository, clone your fork and create a
+branch for one focused change.
 
-```powershell
+```bash
 npm ci
 npm test
 npm start
 ```
 
-The legacy manual YouTube URL resolver needs the optional executable described
-in THIRD-PARTY.md; the browser-capture path does not invoke it.
-
-Run `npm run package` to build the unpacked app or `npm run dist` for a local
-Windows installer. These commands do not publish a release. Review
-[release requirements](docs/RELEASING.md) before distributing binaries.
+YouTube extraction needs `vendor/yt-dlp_macos`; run `npm run fetch:ytdlp` once to download
+and verify it. Run `npm run dist:x64` or `npm run dist:arm64` to build a local DMG on a Mac
+of that architecture. Neither command publishes anything. See [docs/RELEASING.md](docs/RELEASING.md).
 
 ## Pull requests
 
-- Link the implementation issue and its parent goal, and identify prerequisites.
-- Use `Closes #...` only for an issue fully completed by the PR; use `Refs #...`
-  for partial work and parent goals. Keep each PR focused and wait for prerequisite
-  changes to merge and pass validation before merging dependent work.
-- Explain the problem, the change, and how you tested it.
-- Add regressions for parsing, transfers, authentication, and lifecycle changes.
-- Preserve the compact Windows layout and keyboard accessibility.
-- Distinguish local fixture tests from live-browser verification.
-- Keep captured URLs, cookies, tokens, browser profiles, and downloads out of Git.
-- Do not include proprietary IDM code, extracted binaries, or DRM bypasses.
-- Do not use `pull_request_target` to run untrusted contributor code with secrets.
-
-By contributing, you agree to license your original contributions under the MIT
-license. Third-party materials must retain compatible upstream notices.
-
-Please be respectful. Do not post private media or session data in bug reports.
+Keep changes focused, include tests where behaviour changes, and make sure `npm test` passes.

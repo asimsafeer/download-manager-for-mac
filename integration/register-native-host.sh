@@ -1,5 +1,5 @@
 #!/bin/bash
-# Awesome Downloader – macOS browser native messaging host registration.
+# Mac IDM – macOS browser native messaging host registration.
 # Equivalent of register-native-host.ps1 for macOS.
 #
 # Usage:
@@ -35,7 +35,7 @@ if [[ ! -x "$HOST_PATH" ]]; then
   exit 1
 fi
 
-HOST_NAME="com.awesome.downloader"
+HOST_NAME="com.aasimdev.macidm"
 
 case "$BROWSER" in
   Chrome)
@@ -66,7 +66,7 @@ if [[ "$BROWSER" == "Firefox" ]]; then
   cat > "$MANIFEST_PATH" <<EOF
 {
   "name": "$HOST_NAME",
-  "description": "Awesome Downloader browser bridge",
+  "description": "Mac IDM browser bridge",
   "path": "$HOST_PATH",
   "type": "stdio",
   "allowed_extensions": ["$EXTENSION_ID"]
@@ -76,7 +76,7 @@ else
   cat > "$MANIFEST_PATH" <<EOF
 {
   "name": "$HOST_NAME",
-  "description": "Awesome Downloader browser bridge",
+  "description": "Mac IDM browser bridge",
   "path": "$HOST_PATH",
   "type": "stdio",
   "allowed_origins": ["chrome-extension://$EXTENSION_ID/"]

@@ -16,16 +16,16 @@ a completed redistribution audit. See docs/RELEASING.md.
 
 # YouTube SABR transport
 
-The browser-capture download path uses `googlevideo` 5.0.1, an MIT-licensed library for YouTube's UMP/SABR transport. Awesome Downloader supplies its own browser-session capture, format selection, desktop handoff, file writing, muxing, and user interface.
+The browser-capture download path uses `googlevideo` 5.0.1, an MIT-licensed library for YouTube's UMP/SABR transport. Mac IDM supplies its own browser-session capture, format selection, desktop handoff, file writing, muxing, and user interface.
 
 Source and license: https://github.com/LuanRT/GoogleVideo
 
 # YouTube extraction
 
-The Windows build includes yt-dlp 2026.08.19 from its official GitHub release,
-SHA-256 `66674953fe251b89f4d08c5f0e35e0728679bd67ab3d7d05c0562af101dd3e7a`.
-Source: https://github.com/yt-dlp/yt-dlp/tree/2026.08.19 . The core is public domain;
-the Windows executable includes additional components under their own licenses.
-Full upstream notices are included in `vendor/LICENSE.txt` and
-`vendor/THIRD_PARTY_LICENSES.txt`, copied to the packaged `resources/tools` folder.
+The macOS builds bundle the official `yt-dlp_macos` (universal2) from the yt-dlp release
+pinned in `scripts/fetch-yt-dlp.mjs` (2026.08.19). The script verifies its SHA-256 against the
+release's `SHA2-256SUMS` before packaging. Source: https://github.com/yt-dlp/yt-dlp . The core
+is public domain (Unlicense); the executable includes additional components under their own
+licenses. Full upstream notices are in `vendor/LICENSE.txt` and `vendor/THIRD_PARTY_LICENSES.txt`,
+copied to the packaged `resources/tools` folder.
 This is an independent extractor, not recovered IDM implementation code.

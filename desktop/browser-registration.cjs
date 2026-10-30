@@ -40,10 +40,10 @@ function computeExtensionId(folderPath) {
 async function registerBrowser({ browser, extensionId }, { dataDirectory, integrationRoot }) {
   const spec = browserSpec(browser);
   if (typeof extensionId !== 'string' || !(spec.firefox ? /^[A-Za-z0-9@._{}-]{1,128}$/ : /^[a-p]{32}$/).test(extensionId)) throw new Error("Copy the extension ID from your browser's extensions page.");
-  const host = 'com.awesome.downloader';
+  const host = 'com.aasimdev.macidm';
   const isWindows = process.platform === 'win32';
   const nativeHostPath = path.join(integrationRoot, 'integration', isWindows ? 'native-host.exe' : 'native-host.sh');
-  const manifest = { name: host, description: 'Awesome Downloader browser bridge', path: nativeHostPath, type: 'stdio' };
+  const manifest = { name: host, description: 'Mac IDM browser bridge', path: nativeHostPath, type: 'stdio' };
   if (spec.firefox) manifest.allowed_extensions = [extensionId];
   else manifest.allowed_origins = [`chrome-extension://${extensionId}/`];
 
@@ -146,7 +146,7 @@ async function connectInstalledBrowsers({ dataDirectory, integrationRoot, localA
             if (installed && !ownExtension) {
               const manifest = JSON.parse(await fs.readFile(path.join(installed, 'manifest.json'), 'utf8'));
               const background = await fs.readFile(path.join(installed, 'background.js'), 'utf8');
-              ownExtension = manifest.name === 'Awesome Downloader Integration' && manifest.background?.service_worker === 'background.js' && background.includes("const HOST = 'com.awesome.downloader'");
+              ownExtension = manifest.name === 'Mac IDM Integration' && manifest.background?.service_worker === 'background.js' && background.includes("const HOST = 'com.aasimdev.macidm'");
             }
             if (ownExtension) ids.add(id);
           }
