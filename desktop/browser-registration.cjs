@@ -90,16 +90,22 @@ async function connectInstalledBrowsers({ dataDirectory, integrationRoot, appSup
       for (const file of ['Preferences', 'Secure Preferences']) {
         try {
           const settings = JSON.parse(await fs.readFile(path.join(root, profile.name, file), 'utf8')).extensions?.settings || {};
+          const extensionsDirectory = path.join(root, profile.name, 'Extensions');
           for (const [id, entry] of Object.entries(settings)) {
-            if (!/^[a-p]{32}$/.test(id) || !entry.path || !path.isAbsolute(entry.path)) continue;
-            const installed = await fs.realpath(entry.path).catch(() => null);
-            let ownExtension = installed?.toLowerCase() === expected.toLowerCase();
-            if (installed && !ownExtension) {
-              const manifest = JSON.parse(await fs.readFile(path.join(installed, 'manifest.json'), 'utf8'));
-              const background = await fs.readFile(path.join(installed, 'background.js'), 'utf8');
-              ownExtension = manifest.name === 'Download Manager for Mac Integration' && manifest.background?.service_worker === 'background.js' && background.includes("const HOST = 'com.asimsafeer.downloadmanagerformac'");
-            }
-            if (ownExtension) ids.add(id);
+            if (!/^[a-p]{32}$/.test(id) || !entry.path) continue;
+            // "Load unpacked" extensions have an absolute path; store-installed ones are relative to <profile>/Extensions.
+            const location = path.isAbsolute(entry.path) ? entry.path : path.join(extensionsDirectory, entry.path);
+            if (!path.isAbsolute(entry.path) && path.relative(extensionsDirectory, location).startsWith('..')) continue;
+            try {
+              const installed = await fs.realpath(location).catch(() => null);
+              let ownExtension = installed?.toLowerCase() === expected.toLowerCase();
+              if (installed && !ownExtension) {
+                const manifest = JSON.parse(await fs.readFile(path.join(installed, 'manifest.json'), 'utf8'));
+                const background = await fs.readFile(path.join(installed, 'background.js'), 'utf8');
+                ownExtension = manifest.name === 'Download Manager for Mac Integration' && manifest.background?.service_worker === 'background.js' && background.includes("const HOST = 'com.asimsafeer.downloadmanagerformac'");
+              }
+              if (ownExtension) ids.add(id);
+            } catch {}
           }
         } catch {}
       }
