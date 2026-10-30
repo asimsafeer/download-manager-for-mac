@@ -20,8 +20,36 @@ Not sure which one you have? Apple menu > About This Mac. "Chip: Apple M…" mea
 "Processor: Intel …" means x64.
 
 1. Open the DMG and drag **Download Manager for Mac** into **Applications**.
-2. Builds are not notarized yet. On first launch, right-click the app and choose
-   **Open**, then confirm.
+2. Open it once. macOS will warn that it cannot verify the app; see
+   [First launch](#first-launch-macos-security-warning) below. This is expected for now.
+3. Optional: check your download against the `SHA256SUMS-*.txt` file attached to the release
+   with `shasum -a 256 -c SHA256SUMS-x64.txt` (or `-arm64`), run in the folder with the DMG.
+
+## First launch (macOS security warning)
+
+These builds are signed ad-hoc but **not notarized by Apple**, because notarization needs a paid
+Apple Developer account (see [docs/NOTARIZATION.md](docs/NOTARIZATION.md)). The first time you open
+the app, macOS therefore says it cannot verify it. Follow Apple's documented steps
+([Safely open apps on your Mac](https://support.apple.com/en-us/102445)):
+
+1. Double-click **Download Manager for Mac** in Applications. When macOS blocks it, click **Done**.
+2. Open **System Settings > Privacy & Security** and scroll down to **Security**.
+3. Next to the message that the app was blocked, click **Open Anyway**, enter your password if asked,
+   then click **Open** in the prompt that appears.
+
+After that, the app opens normally. On older macOS versions (Sonoma and earlier) you can also
+right-click the app, choose **Open**, then confirm. Only do this for a copy you downloaded from this
+project's [Releases](https://github.com/asimsafeer/download-manager-for-mac/releases) page.
+
+If you prefer Terminal, this removes the download quarantine flag instead:
+
+```bash
+xattr -dr com.apple.quarantine "/Applications/Download Manager for Mac.app"
+```
+
+**First YouTube use:** the first time the app runs its bundled YouTube downloader, macOS checks
+every file in it once. This can take a few minutes on a busy Mac. The app does this in the background
+at launch; if you click a YouTube video too early it asks you to try again shortly.
 
 ## Features
 
@@ -54,7 +82,14 @@ npm run verify:arch -- x64   # check the packaged ffmpeg / yt-dlp match the arch
 
 Build each architecture on a matching Mac (or the matching GitHub runner, as the
 release workflow does) so `ffmpeg-static` downloads the right ffmpeg.
-`npm run dist*` also downloads and checksum-verifies the official `yt-dlp_macos`.
+`npm run dist*` also downloads and checksum-verifies the official yt-dlp one-directory build
+(`yt-dlp_macos.zip`). `npm run package:extension` builds the browser-extension ZIP for store
+submission (see [docs/EXTENSION-STORES.md](docs/EXTENSION-STORES.md)).
+
+## Security and privacy
+
+Report vulnerabilities privately; see [SECURITY.md](SECURITY.md). The app and its browser extension
+send nothing to any server run by this project; see [docs/PRIVACY.md](docs/PRIVACY.md).
 
 ## Acknowledgements and license
 

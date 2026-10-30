@@ -15,6 +15,7 @@
     "fetch:ytdlp": "node scripts/fetch-yt-dlp.mjs",
     "prepare:licenses": "node scripts/write-ffmpeg-info.mjs",
     "icons": "bash scripts/build-icons.sh",
+    "package:extension": "bash scripts/package-extension.sh",
     "dist": "npm run fetch:ytdlp && npm run prepare:licenses && electron-builder --mac dmg --publish never",
     "dist:zip": "npm run fetch:ytdlp && npm run prepare:licenses && electron-builder --mac zip --publish never",
     "dist:x64": "npm run fetch:ytdlp && npm run prepare:licenses && electron-builder --mac dmg zip --x64 --publish never",
