@@ -1,6 +1,4 @@
 node_modules/
-vendor/*.exe
-integration/native-host.exe
 integration/runtime-path.txt
 integration/desktop-launch.json
 release/
@@ -9,7 +7,6 @@ research/
 TODO.md
 tests/QA.md
 .playwright-cli/
-integration/native-host.cmd
 .env
 .env.*
 !.env.example

@@ -6,8 +6,5 @@
 *.md text eol=lf
 *.yml text eol=lf
 *.yaml text eol=lf
-*.ps1 text eol=crlf
-*.cmd text eol=crlf
 vendor/*.txt -text
 *.png binary
-*.ico binary
