@@ -9,7 +9,10 @@ Binary release and associated source/build information: https://github.com/eugen
 FFmpeg source and licensing: https://ffmpeg.org/download.html and https://ffmpeg.org/legal.html
 
 Bundled Electron and dependency license files retain their upstream notices. The
-installer includes FFmpeg's GPL text and build provenance under `resources/licenses`.
+installer includes, under `resources/licenses`: the GPL-3.0 text (`ffmpeg-static-LICENSE.txt`),
+FFmpeg's own licensing note (`ffmpeg-licensing-note.txt`) and `ffmpeg-build-info.txt`, which is
+generated at build time from the bundled binary and records its version, builder and configure
+flags (`ffmpeg -version`). Each architecture's build describes its own binary.
 Corresponding source/build material for this exact binary and its linked libraries
 must be prepared before a public binary release; upstream links here alone are not
 a completed redistribution audit. See docs/RELEASING.md.

@@ -11,12 +11,14 @@
   "scripts": {
     "start": "electron .",
     "test": "node --test tests/*.test.mjs integration/*.test.cjs extension/*.test.cjs",
-    "package": "electron-builder --mac dir",
+    "package": "npm run prepare:licenses && electron-builder --mac dir",
     "fetch:ytdlp": "node scripts/fetch-yt-dlp.mjs",
-    "dist": "npm run fetch:ytdlp && electron-builder --mac dmg --publish never",
-    "dist:zip": "npm run fetch:ytdlp && electron-builder --mac zip --publish never",
-    "dist:x64": "npm run fetch:ytdlp && electron-builder --mac dmg zip --x64 --publish never",
-    "dist:arm64": "npm run fetch:ytdlp && electron-builder --mac dmg zip --arm64 --publish never",
+    "prepare:licenses": "node scripts/write-ffmpeg-info.mjs",
+    "icons": "bash scripts/build-icons.sh",
+    "dist": "npm run fetch:ytdlp && npm run prepare:licenses && electron-builder --mac dmg --publish never",
+    "dist:zip": "npm run fetch:ytdlp && npm run prepare:licenses && electron-builder --mac zip --publish never",
+    "dist:x64": "npm run fetch:ytdlp && npm run prepare:licenses && electron-builder --mac dmg zip --x64 --publish never",
+    "dist:arm64": "npm run fetch:ytdlp && npm run prepare:licenses && electron-builder --mac dmg zip --arm64 --publish never",
     "verify:arch": "bash scripts/verify-bundle-arch.sh"
   },
   "devDependencies": {
