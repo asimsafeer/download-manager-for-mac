@@ -60,6 +60,16 @@ at launch; if you click a YouTube video too early it asks you to try again short
 - Separate progress and completion windows; duplicate-download prevention.
 - Menu bar tray, dock support and a native messaging bridge to the browser extension.
 
+## Screenshots
+
+Sample data; the app is shown as it looks on macOS.
+
+![Main window with downloads in several states](docs/screenshots/main-window.png)
+
+![Download File Info dialog](docs/screenshots/add-download.png)
+
+![Browser integration dialog](docs/screenshots/browser-integration.png)
+
 ## Browser extension setup (Chrome / Edge / Brave / Opera)
 
 1. Click **Browser Integration** in the Download Manager for Mac toolbar.
