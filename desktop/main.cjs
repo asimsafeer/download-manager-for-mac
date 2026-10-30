@@ -192,7 +192,9 @@ if (process.argv.includes('--native-host')) {
         if (engine.settings.notifyOnComplete && Notification.isSupported()) new Notification({ title: 'Download complete', body: d.filename }).show();
         if (engine.settings.revealOnComplete && d.path) shell.showItemInFolder(d.path);
       });
-      const icon = nativeImage.createFromPath(appIconPath).resize({width:16,height:16});
+      // trayTemplate.png + trayTemplate@2x.png: macOS picks the @2x file and recolours the template for light/dark menu bars
+      const icon = nativeImage.createFromPath(path.join(root, 'assets', 'trayTemplate.png'));
+      icon.setTemplateImage(true);
       tray = new Tray(icon);
       tray.setToolTip('Mac IDM');
       tray.setContextMenu(Menu.buildFromTemplate([{ label: 'Show downloads', click: () => window.show() }, { label: 'Quit', click: () => app.quit() }]));

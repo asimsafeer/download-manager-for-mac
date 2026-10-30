@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="36" height="36">
+  <!-- macOS menu-bar template image: black on transparent, drawn on a 36 px grid (18 pt @2x). Original artwork. -->
+  <g fill="#000">
+    <rect x="16" y="3" width="4" height="5" rx="2"/>
+    <rect x="16" y="10" width="4" height="14" rx="2"/>
+    <rect x="8" y="30" width="20" height="4" rx="2"/>
+  </g>
+  <path d="M10 16L18 24L26 16" fill="none" stroke="#000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
