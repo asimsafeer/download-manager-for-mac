@@ -155,6 +155,8 @@ if (process.argv.includes('--native-host')) {
           { type: 'separator' },
           { label: 'Quit Download Manager for Mac', accelerator: 'CmdOrCtrl+Q', click: () => app.quit() }
         ] },
+        // Needed on macOS so Cmd+C / Cmd+V / Cmd+X / Cmd+A / Cmd+Z work in text fields.
+        { role: 'editMenu' },
         { label: 'Tasks', submenu: [ { label: 'Add new download…', accelerator: 'CmdOrCtrl+N', click: command('add') }, { label: 'Add batch download…', click: command('add') }, { label: 'Add batch download from clipboard', click: command('paste') }, { type: 'separator' },
           { label: 'Export', submenu: [{ label: 'To text file…', click: async () => {
             const result = await dialog.showSaveDialog(window, { defaultPath: 'downloads.txt', filters: [{ name: 'URL list', extensions: ['txt'] }] });
@@ -172,7 +174,7 @@ if (process.argv.includes('--native-host')) {
               await dialog.showMessageBox(window, { message: `Imported ${urls.length} downloads.`, detail: 'The imported downloads are paused. Select Start Queue to begin.' });
             } catch (e) { dialog.showErrorBox('Could not import downloads', e.message); }
           } }] } ] },
-        { label: 'File', submenu: [ { label: 'Download properties…', click: command('details') }, { label: 'Remove selected', accelerator: 'Backspace', click: command('remove') }, { label: 'Remove completed downloads', click: command('removeCompleted') } ] },
+        { label: 'File', submenu: [ { label: 'Download properties…', click: command('details') }, { label: 'Remove selected', accelerator: 'CmdOrCtrl+Backspace', click: command('remove') }, { label: 'Remove completed downloads', click: command('removeCompleted') } ] },
         { label: 'Downloads', submenu: [ { label: 'Pause all', click: command('pauseAll') }, { label: 'Stop all', click: command('pauseAll') }, { type: 'separator' }, { label: 'Delete all completed', click: command('removeCompleted') }, { type: 'separator' }, { label: 'Find', accelerator: 'CmdOrCtrl+F', click: command('find') }, { type: 'separator' }, { label: 'Scheduler…', click: command('scheduler') }, { label: 'Start queue', click: command('resumeAll') }, { label: 'Stop queue', click: command('pauseAll') }, { label: 'Speed limiter…', click: command('settings') }, { type: 'separator' }, { label: 'Options…', accelerator: 'CmdOrCtrl+,', click: command('settings') } ] },
         { label: 'View', submenu: [ { label: 'All downloads', click: command('all') }, { role: 'togglefullscreen' }, { type: 'separator' }, { role: 'zoomIn' }, { role: 'zoomOut' }, { role: 'resetZoom' } ] },
         { role: 'windowMenu' },

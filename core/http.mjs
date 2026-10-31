@@ -83,6 +83,35 @@ export async function probe(url, headers, signal) {
     validator: info.headers.etag && !info.headers.etag.startsWith('W/') ? info.headers.etag : info.headers['last-modified'] || null };
 }
 
+const TEXT_EXTENSIONS = /\.(html?|xhtml|php|aspx?|jsp|txt|text|log|md|csv|tsv|json|xml|rss|atom|js|mjs|css|svg|srt|vtt|m3u8?)$/i;
+
+// Some hosts answer an expired or IP-locked link with HTTP 200 and a short
+// message such as "Wrong IP." Treat a small text/HTML reply for a file whose
+// name says it is not text as an error, not as the finished download.
+export function looksLikeErrorPage(contentType, total, filename) {
+  if (!/^\s*text\/(html|plain)\b/i.test(String(contentType || ''))) return false;
+  if (!Number.isSafeInteger(total) || total > 64 * 1024) return false;
+  const name = String(filename || '');
+  return /\.[a-z0-9]{1,8}$/i.test(name) && !TEXT_EXTENSIONS.test(name);
+}
+
+// Reads at most 4 KiB of a reply and returns it as one short plain-text line.
+export async function readMessage(url, headers, signal) {
+  const response = await request(url, { headers, signal });
+  const chunks = [];
+  let size = 0;
+  try {
+    for await (const chunk of response) {
+      chunks.push(chunk);
+      size += chunk.length;
+      if (size >= 4096) break;
+    }
+  } finally { response.destroy(); }
+  return Buffer.concat(chunks).subarray(0, 4096).toString('utf8')
+    .replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]*>/g, ' ')
+    .replace(/[\x00-\x1f\s]+/g, ' ').trim().slice(0, 200);
+}
+
 // Candidates for retrying the same GET; session/URL recovery is a separate concern.
 export const transientStatus = status => status === 408 || status === 429 || (status >= 500 && status <= 599 && ![501, 505].includes(status));
 

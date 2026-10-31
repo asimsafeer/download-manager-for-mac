@@ -3,7 +3,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { setTimeout as delay } from 'node:timers/promises';
-import { validUrl, cleanHeaders, request, probe, transientStatus, retryAfter } from './http.mjs';
+import { validUrl, cleanHeaders, request, probe, transientStatus, retryAfter, looksLikeErrorPage, readMessage } from './http.mjs';
 import { resolveHls, scopedHeaders } from './hls.mjs';
 import { youtubeUrl, downloadYoutube } from './youtube.mjs';
 import {streamProgress} from './stream-progress.mjs';
@@ -229,6 +229,15 @@ export class DownloadEngine extends EventEmitter {
     const mime = String(info.headers['content-type'] || '');
     if (/mpegurl/i.test(mime)) { await this.runHls(d, headers, signal); return; }
     if (/dash\+xml/i.test(mime)) throw new Error('DASH streams need a muxing engine, which is not included yet.');
+    const expectedName = d.explicitFilename ? d.filename : suggestedName(info.url, info.headers['content-disposition']);
+    if (looksLikeErrorPage(mime, info.total, expectedName)) {
+      let message = '';
+      try { message = await readMessage(info.url, headers, signal); } catch { /* Fall back to the generic text. */ }
+      const error = new Error(`The server sent a message instead of the file${message ? `: "${message}"` : ''}. ` +
+        'The link may be expired, or locked to the browser or network that created it. Get a fresh link, or start the download from the browser extension.');
+      error.retryable = false;
+      throw error;
+    }
     if (!d.explicitFilename) { d.filename = suggestedName(info.url, info.headers['content-disposition']); if (!d.explicitCategory) d.category = categoryFor(d.filename); }
     const dir = path.join(this.partsDirectory, d.id);
     await fs.mkdir(dir, { recursive: true });

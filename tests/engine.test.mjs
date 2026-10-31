@@ -8,7 +8,7 @@ import { randomBytes, createHash } from 'node:crypto';
 import { setTimeout as delay } from 'node:timers/promises';
 import { DownloadEngine, safeFilename } from '../core/engine.mjs';
 import { startBridge } from '../core/bridge.mjs';
-import { probe, retryAfter, transientStatus } from '../core/http.mjs';
+import { probe, retryAfter, transientStatus, looksLikeErrorPage } from '../core/http.mjs';
 
 async function fixture(t, options = {}) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'awesome-download-test-'));
@@ -364,4 +364,30 @@ test('request credentials are excluded from history and UI snapshots', async t =
   await f.engine.add({ url: `${f.url}/file.bin`, reviewOnly: true, headers: { cookie: 'session=private-fixture', authorization: 'Bearer private-fixture' } });
   assert.doesNotMatch(JSON.stringify(f.engine.snapshot()), /private-fixture/);
   assert.doesNotMatch(await fs.readFile(path.join(f.root, 'state', 'downloads.json'), 'utf8'), /private-fixture/);
+});
+
+test('a short text reply for a binary file is reported as an error, not saved as the file', async t => {
+  const f = await fixture(t, { intercept: (req, res) => {
+    if (!req.url.startsWith('/locked/')) return false;
+    res.writeHead(200, { 'content-type': 'text/html; charset=UTF-8', 'content-length': '9', 'accept-ranges': 'bytes', etag: '"9-x"' });
+    res.end(req.method === 'HEAD' ? undefined : 'Wrong IP\n');
+    return true;
+  } });
+  const [id] = await f.engine.add({ url: `${f.url}/locked/Game.dmg` });
+  const d = f.engine.downloads.find(x => x.id === id);
+  await until(() => ['complete', 'error'].includes(d.status));
+  assert.equal(d.status, 'error');
+  assert.match(d.error, /instead of the file: "Wrong IP"/);
+  await assert.rejects(fs.access(path.join(f.root, 'downloads', 'Game.dmg')));
+});
+
+test('error-page check leaves real text downloads and large or unknown-size replies alone', () => {
+  assert.equal(looksLikeErrorPage('text/html', 9, 'Game.dmg'), true);
+  assert.equal(looksLikeErrorPage('text/plain', 200, 'archive.zip'), true);
+  assert.equal(looksLikeErrorPage('text/html', 900, 'index.html'), false);
+  assert.equal(looksLikeErrorPage('text/plain', 900, 'notes.txt'), false);
+  assert.equal(looksLikeErrorPage('text/html', 900, 'download'), false);
+  assert.equal(looksLikeErrorPage('text/html', 10 * 1024 * 1024, 'Game.dmg'), false);
+  assert.equal(looksLikeErrorPage('text/html', null, 'Game.dmg'), false);
+  assert.equal(looksLikeErrorPage('application/octet-stream', 9, 'Game.dmg'), false);
 });
